@@ -3,54 +3,97 @@ import RegisterPresenter from "../../presenters/register-presenter";
 export default class RegisterPage {
 	async render() {
 		return `
-      <section class="container mx-auto px-4 py-8 max-w-md">
-        <h1 class="text-2xl font-bold mb-6 text-center">Register</h1>
+      <section class="min-h-screen flex items-center justify-center 
+                text-gray-200 font-mono px-4">
 
-        <form id="registerForm" class="space-y-4">
-          <div>
-            <label for="name" class="block text-sm font-medium">Nama</label>
-            <input 
-              id="name"
-              type="text"
-              class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring focus:ring-blue-300"
-              required
-            />
-          </div>
+        <div class="w-full max-w-md p-8 rounded-2xl 
+                    border border-cyan-500/30
+                    bg-[#020617]/80 backdrop-blur
+                    shadow-[0_0_40px_rgba(0,255,255,0.08)]">
 
-          <div>
-            <label for="email" class="block text-sm font-medium">Email</label>
-            <input 
-              id="email"
-              type="email"
-              class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring focus:ring-blue-300"
-              required
-            />
-          </div>
+          <!-- TITLE -->
+          <h1 class="text-2xl font-bold text-center text-cyan-400 mb-6 tracking-wide">
+            [ REGISTER ]
+          </h1>
 
-          <div>
-            <label for="password" class="block text-sm font-medium">Password</label>
-            <input 
-              id="password"
-              type="password"
-              class="w-full border rounded-lg px-3 py-2 focus:outline-none focus:ring focus:ring-blue-300"
-              required
-            />
-          </div>
+          <form id="registerForm" class="space-y-5">
 
-          <button 
-            type="submit"
-            class="w-full bg-green-500 text-white py-2 rounded-lg hover:bg-green-600 transition"
-          >
-            Register
-          </button>
-        </form>
+            <!-- NAME -->
+            <div>
+              <label for="name" class="text-sm text-gray-400 block mb-1">
+                name
+              </label>
+              <input 
+                id="name"
+                type="text"
+                placeholder="your name"
+                class="w-full px-3 py-2 rounded-lg 
+                       bg-black/40 border border-gray-700
+                       focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400
+                       outline-none transition text-sm"
+                required
+              />
+            </div>
 
-        <p id="message" class="text-red-500 mt-4 text-center"></p>
+            <!-- EMAIL -->
+            <div>
+              <label for="email" class="text-sm text-gray-400 block mb-1">
+                email
+              </label>
+              <input 
+                id="email"
+                type="email"
+                placeholder="user@arch.local"
+                class="w-full px-3 py-2 rounded-lg 
+                       bg-black/40 border border-gray-700
+                       focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400
+                       outline-none transition text-sm"
+                required
+              />
+            </div>
 
-        <p class="text-center mt-4 text-sm">
-          Sudah punya akun?
-          <a href="#/login" class="text-blue-500 hover:underline">Login</a>
-        </p>
+            <!-- PASSWORD -->
+            <div>
+              <label for="password" class="text-sm text-gray-400 block mb-1">
+                password
+              </label>
+              <input 
+                id="password"
+                type="password"
+                placeholder="••••••••"
+                class="w-full px-3 py-2 rounded-lg 
+                       bg-black/40 border border-gray-700
+                       focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400
+                       outline-none transition text-sm"
+                required
+              />
+            </div>
+
+            <!-- BUTTON -->
+            <button 
+              type="submit"
+              class="w-full py-2 rounded-lg 
+                     bg-cyan-500/10 border border-cyan-400 text-cyan-400
+                     hover:bg-cyan-400 hover:text-black
+                     transition duration-200 font-semibold tracking-wide"
+            >
+              INITIALIZE ACCOUNT
+            </button>
+
+          </form>
+
+          <!-- MESSAGE -->
+          <p id="message" class="text-red-400 text-sm text-center mt-4"></p>
+
+          <!-- FOOTER -->
+          <p class="text-center mt-6 text-xs text-gray-500">
+            already registered?
+            <a href="#/login" class="text-cyan-400 hover:underline">
+              login
+            </a>
+          </p>
+
+        </div>
       </section>
     `;
 	}

@@ -1,5 +1,37 @@
 import routes from '../routes/routes';
 import { getActiveRoute } from '../routes/url-parser';
+import { isLoggedIn, logout } from '../data/api';
+
+function renderNav() {
+	const navList = document.getElementById("nav-list");
+
+	if (isLoggedIn()) {
+		navList.innerHTML = `
+      <li><a href="#/">Beranda</a></li>
+      <li><a href="#/account">Akun</a></li>
+      <li><a href="#" id="logoutBtn">Logout</a></li>
+    `;
+	} else {
+		navList.innerHTML = `
+      <li><a href="#/">Beranda</a></li>
+      <li><a href="#/login">Login</a></li>
+      <li><a href="#/register">Register</a></li>
+    `;
+	}
+}
+
+function setupLogout() {
+	const btn = document.getElementById("logoutBtn");
+
+	if (btn) {
+		btn.addEventListener("click", (e) => {
+			e.preventDefault();
+			logout();
+			location.hash = "/login";
+			renderNav();
+		});
+	}
+}
 
 class App {
   #content = null;
@@ -38,6 +70,9 @@ class App {
   async renderPage() {
     const url = getActiveRoute();
     const page = routes[url];
+
+    renderNav();
+    setupLogout();
 
     this.#content.innerHTML = await page.render();
     await page.afterRender();
