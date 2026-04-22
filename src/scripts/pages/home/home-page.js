@@ -18,7 +18,7 @@ export default class HomePage {
           </div>
 
           <a 
-            href="#/"
+            href="#/add-story"
             class="inline-block px-4 py-2 rounded-lg 
                    border border-cyan-400 text-cyan-400
                    hover:bg-cyan-400 hover:text-black
@@ -75,7 +75,6 @@ export default class HomePage {
 				},
 
 				renderStories: (stories) => {
-					allStories = stories;
 
 					const container = document.getElementById("stories");
 					const empty = document.getElementById("empty");
@@ -91,8 +90,8 @@ export default class HomePage {
 					container.innerHTML = stories
 						.map(
 							(story) => `
-              <a href="#/stories/${story.id}">
-                <article class="group rounded-2xl overflow-hidden
+              <a href="#/stories/${story.id}" class="block h-full">
+                <article class="h-full group rounded-2xl overflow-hidden
                                 bg-black/40 border border-cyan-500/20
                                 hover:border-cyan-400/40
                                 shadow-[0_0_25px_rgba(0,255,255,0.05)]
@@ -130,7 +129,7 @@ export default class HomePage {
                       </span>
 
                       <span class="text-cyan-400 opacity-70 group-hover:opacity-100 transition">
-                        view →
+                        view ->
                       </span>
                     </div>
 
@@ -155,7 +154,12 @@ export default class HomePage {
 
 		// 🔍 SEARCH FEATURE
 		document.getElementById("searchInput").addEventListener("input", (e) => {
-			const keyword = e.target.value.toLowerCase();
+			const keyword = e.target.value.toLowerCase().trim();
+
+			if (!keyword) {
+				presenter.view.renderStories(allStories);
+				return;
+			}
 
 			const filtered = allStories.filter(
 				(story) =>
@@ -163,7 +167,7 @@ export default class HomePage {
 					story.name.toLowerCase().includes(keyword),
 			);
 
-			presenter.view.renderStories(filtered);
+      presenter.view.renderStories(filtered);
 		});
 	}
 }

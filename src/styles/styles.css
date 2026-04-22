@@ -1,8 +1,13 @@
 @import "tailwindcss";
 
+@theme {
+  /* This overrides the default 'font-mono' utility */
+  --font-mono: "JetBrains Mono", ui-monospace, monospace;
+}
+
 * {
 	box-sizing: border-box;
-}
+} <- 
 
 .container {
 	max-width: 1300px;
@@ -12,7 +17,7 @@
 .main-header {
   @apply min-h-[90px] py-5 px-6 md:px-10 z-10
          flex justify-between items-center gap-6
-         bg-[#020617] 
+         bg-[#020617]/75 backdrop-blur-md
          border-b border-cyan-500/20
          text-cyan-400;
 }
@@ -24,14 +29,13 @@
 }
 
 .navigation-drawer {
-	@apply bg-[#020617]/95 backdrop-blur-xl
+	@apply bg-[#020617]/75 backdrop-blur-md
          border-r border-cyan-500/20
          shadow-[0_0_25px_rgba(0,255,255,0.05)];
 
 	min-height: 100vh;
 	width: 200px;
 	padding: 20px 10px;
-
 
 	position: fixed;
 	inset-block-start: 0;
@@ -90,29 +94,35 @@
 /* Write your styles more here */
 
 @media screen and (width > 1000px) {
-	.navigation-drawer {
-		min-height: auto;
-		width: auto;
-		padding: 0;
-		background-color: transparent;
+  .navigation-drawer {
+    min-height: auto;
+    width: auto;
+    padding: 0;
 
-		flex-direction: row;
-		justify-content: space-between;
+    position: static;
+    transform: translateX(0);
 
-		position: static;
-		box-shadow: none;
-		transform: translateX(0);
-	}
+    /* 🔥 override SEMUA efek */
+    background-color: transparent;
+    backdrop-filter: none;
+    box-shadow: none;
 
-	.nav-list {
-		flex-direction: row;
-	}
+    display: flex;
+    align-items: center;
+  }
 
-	.nav-list li a {
-		display: inline-block;
-	}
+  .nav-list {
+    flex-direction: row;
+    align-items: center;
+    gap: 20px;
+  }
 
-	.drawer-button {
-		display: none;
-	}
+  .nav-list li a {
+    display: inline-block;
+    padding: 4px 8px; /* biar gak terlalu “kotak” */
+  }
+
+  .drawer-button {
+    display: none;
+  }
 }
