@@ -33,9 +33,9 @@ export default class DetailPage {
             class="w-full h-auto object-cover md:w-1/2 md:h-auto"
           />
 
-          <div class="flex flex-col justify-between p-5">
+          <div class="flex flex-col flex-1 justify-between p-5">
 
-            <div>
+            <div class="w-full">
               <h1 class="text-xl font-bold text-cyan-400 mb-2">
                 ${story.name}
               </h1>
@@ -69,6 +69,24 @@ export default class DetailPage {
 
         </article>
       `;
+
+      if (story.lat !== null && story.lon !== null) {
+				const map = L.map("map").setView([story.lat, story.lon], 13);
+
+				L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+					attribution: "&copy; OpenStreetMap contributors",
+				}).addTo(map);
+
+				L.marker([story.lat, story.lon])
+					.addTo(map)
+					.bindPopup(story.name)
+					.openPopup();
+
+				setTimeout(() => {
+					map.invalidateSize();
+				}, 100);
+			}
+
 		} catch (err) {
 			document.getElementById("detail").innerHTML = `
         <p class="text-red-400 text-center">${err.message}</p>

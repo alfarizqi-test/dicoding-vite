@@ -96,7 +96,9 @@ export default class AddStoryPage {
           
         </form>
 
-        <p id="message" class="text-center mt-4"></p>
+        <div class="mt-6 flex flex-col items-center">
+          <p id="message"></p>
+        </div>
 
       </div>
     </section>
@@ -228,11 +230,14 @@ export default class AddStoryPage {
 		document.getElementById("storyForm").addEventListener("submit", (e) => {
 			e.preventDefault();
 
+			const latValue = document.getElementById("lat").value;
+			const lonValue = document.getElementById("lon").value;
+
 			presenter.addStory({
 				description: document.getElementById("description").value,
 				photo: inputFile.files[0],
-				lat: document.getElementById("lat").value,
-				lon: document.getElementById("lon").value,
+				lat: latValue !== "" ? parseFloat(latValue) : null,
+				lon: lonValue !== "" ? parseFloat(lonValue) : null,
 			});
 		});
 	}

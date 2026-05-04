@@ -10,15 +10,21 @@ export default class AddStoryPresenter {
 	async addStory({ description, photo, lat, lon }) {
 		try {
 			if (!photo) {
-				this.#view.showMessage("photo wajib diisi", true);
+				this.#view.showMessage("foto wajib diisi", true);
 				return;
 			}
 
-			// 🔥 validasi ukuran (ini sering dilupakan)
-			if (photo.size > 1024 * 1024) {
-				this.#view.showMessage("maks ukuran 1MB", true);
+			if (!description) {
+				this.#view.showMessage("deskripsi wajib diisi", true);
 				return;
 			}
+
+			if (!lat || !lon) {
+				this.#view.showMessage("lokasi wajib diisi", true);
+				return;
+			}
+
+			this.#view.showMessage("uploading...");
 
 			await addStory({
 				description,
