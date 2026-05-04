@@ -87,7 +87,6 @@ class App {
 		setupLogout();
 
 		if (!document.startViewTransition) {
-			// fallback
 			this.#content.innerHTML = await page.render();
 			await page.afterRender();
 			return;

@@ -62,8 +62,12 @@ export default class HomePage {
 	}
 
 	async afterRender() {
-		let allStories = stories;
-    const searchInput = document.getElementById("searchInput");
+		const searchInput = document.getElementById("searchInput");
+		const container = document.getElementById("stories");
+		const empty = document.getElementById("empty");
+
+		// 1. Buat variabel penampung data lokal
+		let allStories = [];
 
 		const presenter = new HomePresenter({
 			view: {
@@ -76,105 +80,73 @@ export default class HomePage {
 				},
 
 				renderStories: (stories) => {
-
-					const container = document.getElementById("stories");
-					const empty = document.getElementById("empty");
-
-					if (stories.length === 0) {
-						empty.classList.remove("hidden");
-						container.innerHTML = "";
-						return;
-					} else {
-						empty.classList.add("hidden");
-					}
-
-					container.innerHTML = stories
-						.map(
-							(story) => `
-              <a href="#/stories/${story.id}" class="block h-full">
-                <article class="h-full group rounded-2xl overflow-hidden
-                                bg-black/40 border border-cyan-500/20
-                                hover:border-cyan-400/40
-                                shadow-[0_0_25px_rgba(0,255,255,0.05)]
-                                hover:shadow-[0_0_40px_rgba(0,255,255,0.1)]
-                                transition duration-300">
-
-                  <!-- IMAGE -->
-                  <div class="relative overflow-hidden">
-                    <img 
-                      src="${story.photoUrl}" 
-                      alt="story image"
-                      class="w-full h-48 object-cover 
-                             opacity-80 group-hover:opacity-100
-                             group-hover:scale-105 transition duration-300"
-                    />
-
-                    <!-- overlay subtle -->
-                    <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
-                  </div>
-
-                  <!-- CONTENT -->
-                  <div class="p-4">
-
-                    <h3 class="font-semibold text-lg text-cyan-300 mb-1 truncate">
-                      ${story.name}
-                    </h3>
-
-                    <p class="text-sm text-gray-400 line-clamp-3 mb-3">
-                      ${story.description}
-                    </p>
-
-                    <div class="flex items-center justify-between text-xs text-gray-500">
-                      <span>
-                        ${new Date(story.createdAt).toLocaleString()}
-                      </span>
-
-                      <span class="text-cyan-400 opacity-70 group-hover:opacity-100 transition">
-                        view ->
-                      </span>
-                    </div>
-
-                  </div>
-
-                </article>
-              </a>
-              `,
-						)
-						.join("");
+					// 2. Simpan data yang datang dari API ke variabel lokal kita
+					// Ini penting agar search bisa memfilter data yang sudah ada
+					allStories = stories;
+					this._displayStories(stories);
 				},
 
 				showError: (msg) => {
-					document.getElementById("stories").innerHTML = `
-            <p class="text-red-500 text-center col-span-full self-center justify-self-center">${msg}</p>
-          `;
+					container.innerHTML = `<p class="text-red-500 text-center col-span-full">${msg}</p>`;
 				},
 			},
 		});
 
+		// Jalankan fetch data
 		await presenter.init();
 
-		// 🔍 SEARCH FEATURE
-		// document.getElementById("searchInput").addEventListener("input", (e) => {
-		// 	const keyword = e.target.value.toLowerCase().trim();
+		// 3. Logika Search (Input Event)
+		searchInput.addEventListener("input", (e) => {
+			const keyword = e.target.value.toLowerCase().trim();
 
-		// 	if (!keyword) {
-		// 		presenter.view.renderStories(allStories);
-		// 		return;
-		// 	}
+			if (!keyword) {
+				this._displayStories(allStories);
+				return;
+			}
 
-		// 	const filtered = allStories.filter(
-		// 		(story) =>
-		// 			story.description.toLowerCase().includes(keyword) ||
-		// 			story.name.toLowerCase().includes(keyword),
-		// 	);
+			const filtered = allStories.filter(
+				(story) =>
+					story.name.toLowerCase().includes(keyword) ||
+					story.description.toLowerCase().includes(keyword),
+			);
 
-    //   presenter.view.renderStories(filtered);
-		// });
+			this._displayStories(filtered);
+		});
+	}
 
-    searchInput.addEventListener("input", (e) => {
-      const keyword = e.target.value.toLowerCase().trim();
+	// 4. Helper method untuk render HTML agar tidak duplikasi kode
+	_displayStories(stories) {
+		const container = document.getElementById("stories");
+		const empty = document.getElementById("empty");
 
-      console.log(keyword);
-    });
+		if (stories.length === 0) {
+			empty.classList.remove("hidden");
+			container.innerHTML = "";
+			return;
+		}
+
+		empty.classList.add("hidden");
+		container.innerHTML = stories
+			.map(
+				(story) => `
+      <a href="#/stories/${story.id}" class="block h-full">
+        <article class="h-full group rounded-2xl overflow-hidden bg-black/40 border border-cyan-500/20 hover:border-cyan-400/40 transition duration-300">
+          <div class="relative overflow-hidden">
+            <img src="${story.photoUrl}" class="w-full h-48 object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition duration-300" />
+            <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
+          </div>
+          <div class="p-4">
+            <h3 class="font-semibold text-lg text-cyan-300 mb-1 truncate">${story.name}</h3>
+            <p class="text-sm text-gray-400 line-clamp-3 mb-3">${story.description}</p>
+            <div class="flex items-center justify-between text-xs text-gray-500">
+              <span>${new Date(story.createdAt).toLocaleString()}</span>
+              <span class="text-cyan-400 opacity-70 group-hover:opacity-100 transition">view -></span>
+            </div>
+          </div>
+        </article>
+      </a>
+    `,
+			)
+			.join("");
 	}
 }
