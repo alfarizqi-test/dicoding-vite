@@ -62,7 +62,8 @@ export default class HomePage {
 	}
 
 	async afterRender() {
-		let allStories = [];
+		let allStories = stories;
+    const searchInput = document.getElementById("searchInput");
 
 		const presenter = new HomePresenter({
 			view: {
@@ -153,21 +154,27 @@ export default class HomePage {
 		await presenter.init();
 
 		// 🔍 SEARCH FEATURE
-		document.getElementById("searchInput").addEventListener("input", (e) => {
-			const keyword = e.target.value.toLowerCase().trim();
+		// document.getElementById("searchInput").addEventListener("input", (e) => {
+		// 	const keyword = e.target.value.toLowerCase().trim();
 
-			if (!keyword) {
-				presenter.view.renderStories(allStories);
-				return;
-			}
+		// 	if (!keyword) {
+		// 		presenter.view.renderStories(allStories);
+		// 		return;
+		// 	}
 
-			const filtered = allStories.filter(
-				(story) =>
-					story.description.toLowerCase().includes(keyword) ||
-					story.name.toLowerCase().includes(keyword),
-			);
+		// 	const filtered = allStories.filter(
+		// 		(story) =>
+		// 			story.description.toLowerCase().includes(keyword) ||
+		// 			story.name.toLowerCase().includes(keyword),
+		// 	);
 
-      presenter.view.renderStories(filtered);
-		});
+    //   presenter.view.renderStories(filtered);
+		// });
+
+    searchInput.addEventListener("input", (e) => {
+      const keyword = e.target.value.toLowerCase().trim();
+
+      console.log(keyword);
+    });
 	}
 }

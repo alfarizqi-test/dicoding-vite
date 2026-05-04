@@ -1,5 +1,7 @@
 import { getDetailStory } from "../../data/api";
 import { getActivePathname } from "../../routes/url-parser";
+import L from "leaflet";
+import "leaflet/dist/leaflet.css";
 
 export default class DetailPage {
 	async render() {
@@ -47,12 +49,16 @@ export default class DetailPage {
               </div>
 
               ${
-						  	story.lat && story.lon
-						  		? `<div class="mt-4 text-xs text-cyan-400">
+								story.lat !== null && story.lon !== null
+									? `
+                    <div class="mt-4 text-xs text-cyan-400">
                       📍 ${story.lat}, ${story.lon}
-                    </div>`
-						  		: ""
-						  }
+                    </div>
+
+                    <div id="map" class="w-full h-48 mt-3 rounded-lg border border-gray-700"></div>
+                  `
+									: ""
+							}
             </div>
 
             <a  href="#/" class="text-cyan-400 opacity-70 group-hover:opacity-100 transition">
