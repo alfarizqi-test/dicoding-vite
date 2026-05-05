@@ -12,9 +12,9 @@ export default class HomePage {
             <h1 class="text-2xl font-bold text-cyan-400 tracking-wide">
               [ STORIES ]
             </h1>
-            <p class="text-cyan-400 text-sm">
+            <h2 class="text-cyan-400 text-sm">
               jelajahi cerita pengguna lain
-            </p>
+            </h2>
           </div>
 
           <a 
@@ -31,6 +31,7 @@ export default class HomePage {
         <!-- SEARCH -->
         <form id="searchForm" class="mb-6">
           <div class="relative">
+            <label for="searchInput" class="sr-only">Search stories</label>
             <input 
               id="searchInput"
               type="text" 
@@ -40,7 +41,7 @@ export default class HomePage {
                      focus:border-cyan-400 focus:ring-1 focus:ring-cyan-400
                      outline-none transition text-sm"
             />
-            <span class="absolute left-3 top-2 text-cyan-400">⌕</span>
+            <span class="absolute left-3 top-2 text-cyan-400" aria-hidden="true">⌕</span>
           </div>
         </form>
 
@@ -66,7 +67,6 @@ export default class HomePage {
 		const container = document.getElementById("stories");
 		const empty = document.getElementById("empty");
 
-		// 1. Buat variabel penampung data lokal
 		let allStories = [];
 
 		const presenter = new HomePresenter({
@@ -80,8 +80,6 @@ export default class HomePage {
 				},
 
 				renderStories: (stories) => {
-					// 2. Simpan data yang datang dari API ke variabel lokal kita
-					// Ini penting agar search bisa memfilter data yang sudah ada
 					allStories = stories;
 					this._displayStories(stories);
 				},
@@ -92,10 +90,8 @@ export default class HomePage {
 			},
 		});
 
-		// Jalankan fetch data
 		await presenter.init();
 
-		// 3. Logika Search (Input Event)
 		searchInput.addEventListener("input", (e) => {
 			const keyword = e.target.value.toLowerCase().trim();
 
@@ -114,7 +110,6 @@ export default class HomePage {
 		});
 	}
 
-	// 4. Helper method untuk render HTML agar tidak duplikasi kode
 	_displayStories(stories) {
 		const container = document.getElementById("stories");
 		const empty = document.getElementById("empty");

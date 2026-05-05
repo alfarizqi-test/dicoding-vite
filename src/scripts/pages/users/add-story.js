@@ -225,14 +225,12 @@ export default class AddStoryPage {
 		  attribution: 'Tiles &copy; Esri'
 		});
 		
-		// 2. Inisialisasi map dengan salah satu layer
 		const map = L.map("map", {
 		  center: [-6.2, 106.8],
 		  zoom: 5,
 		  layers: [streetLayer] 
 		});
 		
-		// 3. Tambahkan Control Layer
 		const baseMaps = {
 		  "Street View": streetLayer,
 		  "Satellite View": satelliteLayer
