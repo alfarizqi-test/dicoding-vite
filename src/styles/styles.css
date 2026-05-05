@@ -159,25 +159,3 @@
 @keyframes slide-from-right {
   from { transform: translateX(30px); }
 }
-
-/* ::view-transition-old(root) {
-  animation: out 150ms ease-in;
-}
-
-::view-transition-new(root) {
-  animation: in 150ms ease-out;
-}
-
-@keyframes out {
-  to {
-    opacity: 0;
-    transform: scale(0.98);
-  }
-}
-
-@keyframes in {
-  from {
-    opacity: 0;
-    transform: scale(1.02);
-  }
-} */

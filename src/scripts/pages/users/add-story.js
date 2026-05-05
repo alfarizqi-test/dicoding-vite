@@ -17,88 +17,102 @@ export default class AddStoryPage {
 
         <form id="storyForm" class="space-y-5">
 
-          <!-- PHOTO -->
-          <div class="flex flex-col gap-2">
+		      <!-- PHOTO SECTION -->
+		      <div class="flex flex-col gap-2">
+		        <!-- Perbaikan: Label terhubung dengan input file via 'for' -->
+		        <label for="photo" class="text-sm text-gray-400">Photo Story</label>
 
-            <label class="text-sm text-gray-400">photo</label>
+		        <!-- preview -->
+		        <div id="previewContainer" class="hidden">
+		          <!-- Perbaikan: Menambahkan alt kosong jika dekoratif atau diisi via JS saat file dipilih -->
+		          <img id="previewImage" alt="Story preview"
+		            class="w-full rounded-lg border border-gray-700"/>
+		        </div>
 
-            <!-- preview -->
-            <div id="previewContainer" class="hidden">
-              <img id="previewImage"
-                class="w-full rounded-lg border border-gray-700"/>
-            </div>
+		        <p id="fileName" class="text-xs text-gray-500 text-center" aria-live="polite">
+		          no file selected
+		        </p>
 
-            <p id="fileName" class="text-xs text-gray-500 text-center">
-              no file selected
-            </p>
+		        <input id="photo" type="file" accept="image/*" class="hidden"/>
 
-            <input id="photo" type="file" accept="image/*" class="hidden"/>
+		        <div class="flex gap-2">
+		          <!-- Upload -->
+		          <label for="photo" id="dropZone" tabindex="0" role="button"
+		            class="flex-1 cursor-pointer flex flex-col items-center justify-center
+		                   border border-cyan-500/30 rounded-xl
+		                   bg-black/40 hover:bg-cyan-400 hover:text-black
+		                   transition p-4 text-sm text-cyan-400">
+		            📁 upload
+		          </label>
 
-            <div class="flex gap-2">
+		          <!-- Camera -->
+		          <button type="button" id="camera"
+		            class="flex-1 border border-cyan-500/30 rounded-xl
+		                   bg-black/40 hover:bg-cyan-400 hover:text-black
+		                   transition p-4 text-sm text-cyan-400">
+		            📸 camera
+		          </button>
+		        </div>
 
-              <!-- Upload -->
-              <label for="photo" id="dropZone"
-                class="flex-1 cursor-pointer flex flex-col items-center justify-center
-                       border border-cyan-500/30 rounded-xl
-                       bg-black/40 hover:bg-cyan-400 hover:text-black
-                       transition p-4 text-sm text-cyan-400">
-                📁 upload
-              </label>
+		        <!-- CAMERA UI -->
+		        <div id="cameraContainer" class="hidden space-y-2">
+		          <!-- Perbaikan: Video biasanya butuh title untuk screen reader -->
+		          <video id="video" autoplay playsinline title="Camera Stream"
+		            class="w-full rounded-lg border border-gray-700"></video>
 
-              <!-- Camera -->
-              <button type="button" id="camera"
-                class="flex-1 border border-cyan-500/30 rounded-xl
-                       bg-black/40 hover:bg-cyan-400 hover:text-black
-                       transition p-4 text-sm text-cyan-400">
-                📸 camera
-              </button>
+		          <div class="flex gap-2">
+		            <button type="button" id="captureBtn"
+		              class="flex-1 border border-cyan-400 text-cyan-400 rounded-lg py-2">
+		              CAPTURE
+		            </button>
+		            <button type="button" id="closeCamera"
+		              class="flex-1 border border-red-400 text-red-400 rounded-lg py-2">
+		              CLOSE
+		            </button>
+		          </div>
+		        </div>
+		      </div>
 
-            </div>
+		      <!-- DESCRIPTION -->
+		      <div class="flex flex-col gap-2">
+		        <label for="description" class="text-sm text-gray-400">Description</label>
+		        <textarea id="description" placeholder="Write your story here..."
+		          class="w-full px-3 py-2 rounded-lg bg-black/40 border border-gray-700 focus:border-cyan-400 outline-none"></textarea>
+		      </div>
 
-            <!-- CAMERA UI -->
-            <div id="cameraContainer" class="hidden space-y-2">
-              <video id="video" autoplay playsinline
-                class="w-full rounded-lg border border-gray-700"></video>
+		      <!-- MAP SECTION -->
+		      <div class="flex flex-col gap-2">
+		        <p class="text-sm text-gray-400">Location</p>
+		        <!-- Perbaikan: Menambahkan peran (role) dan label pada div map -->
+		        <div id="map" role="application" aria-label="Interactive Map" class="w-full h-48 rounded-lg border border-gray-700"></div>
 
-              <div class="flex gap-2">
-                <button type="button" id="captureBtn"
-                  class="flex-1 border border-cyan-400 text-cyan-400 rounded-lg py-2">
-                  CAPTURE
-                </button>
+		        <div class="grid grid-cols-2 gap-2">
+		          <div class="flex flex-col gap-1">
+		            <label for="lat" class="sr-only">Latitude</label> <!-- sr-only: hanya untuk screen reader -->
+		            <input id="lat" type="number" step="any" placeholder="Latitude" 
+		              class="px-3 py-2 rounded-lg bg-black/40 border border-gray-700 text-sm focus:border-cyan-400 outline-none"/>
+		          </div>
+		          <div class="flex flex-col gap-1">
+		            <label for="lon" class="sr-only">Longitude</label>
+		            <input id="lon" type="number" step="any" placeholder="Longitude" 
+		              class="px-3 py-2 rounded-lg bg-black/40 border border-gray-700 text-sm focus:border-cyan-400 outline-none"/>
+		          </div>
+		        </div>
+		      </div>
 
-                <button type="button" id="closeCamera"
-                  class="flex-1 border border-red-400 text-red-400 rounded-lg py-2">
-                  CLOSE
-                </button>
-              </div>
-            </div>
+		      <button type="submit"
+		        class="w-full py-2 rounded-lg
+		               border border-cyan-400 text-cyan-400
+		               hover:bg-cyan-400 hover:text-black transition font-bold">
+		        EXECUTE
+		      </button>
 
-          </div>
+		    </form>
 
-          <!-- DESCRIPTION -->
-          <textarea id="description" placeholder="description"
-            class="w-full px-3 py-2 rounded-lg bg-black/40 border border-gray-700"></textarea>
-
-          <!-- MAP -->
-          <div id="map" class="w-full h-48 rounded-lg border border-gray-700"></div>
-
-          <div class="grid grid-cols-2 gap-2">
-            <input id="lat" type="number" step="any" placeholder="lat" class="px-3 py-2 rounded-lg bg-black/40 border border-gray-700 text-sm"/>
-            <input id="lon" type="number" step="any" placeholder="lon" class="px-3 py-2 rounded-lg bg-black/40 border border-gray-700 text-sm"/>
-          </div>
-
-          <button type="submit"
-            class="w-full py-2 rounded-lg
-                   border border-cyan-400 text-cyan-400
-                   hover:bg-cyan-400 hover:text-black transition">
-            EXECUTE
-          </button>
-          
-        </form>
-
-        <div class="mt-6 flex flex-col items-center">
-          <p id="message"></p>
-        </div>
+		    <div class="mt-6 flex flex-col items-center">
+		      <!-- Perbaikan: aria-live agar perubahan pesan dibacakan oleh screen reader -->
+		      <p id="message" aria-live="polite"></p>
+		    </div>
 
       </div>
     </section>
@@ -162,6 +176,13 @@ export default class AddStoryPage {
 			handleFile(e.dataTransfer.files[0]);
 		});
 
+		dropZone.addEventListener("keydown", (e) => {
+			if (e.key === "Enter" || e.key === " ") {
+				e.preventDefault();
+				inputFile.click();
+			}
+		});
+
 		/* ================= CAMERA ================= */
 		async function startCamera() {
 			stream = await navigator.mediaDevices.getUserMedia({ video: true });
@@ -196,23 +217,38 @@ export default class AddStoryPage {
 		});
 
 		/* ================= MAP ================= */
-		const map = L.map("map").setView([-6.2, 106.8], 5);
-
-		L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png").addTo(
-			map,
-		);
-
+		const streetLayer = L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
+		  attribution: '&copy; OpenStreetMap'
+		});
+		
+		const satelliteLayer = L.tileLayer("https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}", {
+		  attribution: 'Tiles &copy; Esri'
+		});
+		
+		// 2. Inisialisasi map dengan salah satu layer
+		const map = L.map("map", {
+		  center: [-6.2, 106.8],
+		  zoom: 5,
+		  layers: [streetLayer] 
+		});
+		
+		// 3. Tambahkan Control Layer
+		const baseMaps = {
+		  "Street View": streetLayer,
+		  "Satellite View": satelliteLayer
+		};
+		L.control.layers(baseMaps).addTo(map);
+		
 		setTimeout(() => map.invalidateSize(), 200);
-
+		
 		let marker;
 		map.on("click", (e) => {
-			const { lat, lng } = e.latlng;
-
-			document.getElementById("lat").value = lat;
-			document.getElementById("lon").value = lng;
-
-			if (marker) marker.setLatLng(e.latlng);
-			else marker = L.marker(e.latlng).addTo(map);
+		  const { lat, lng } = e.latlng;
+		  document.getElementById("lat").value = lat;
+		  document.getElementById("lon").value = lng;
+		
+		  if (marker) marker.setLatLng(e.latlng);
+		  else marker = L.marker(e.latlng).addTo(map);
 		});
 
 		/* ================= SUBMIT ================= */

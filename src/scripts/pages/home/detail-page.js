@@ -1,4 +1,4 @@
-import { getDetailStory } from "../../data/api";
+import DetailPresenter from "../../presenters/detail-presenter";
 import { getActivePathname } from "../../routes/url-parser";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
@@ -6,92 +6,108 @@ import "leaflet/dist/leaflet.css";
 export default class DetailPage {
 	async render() {
 		return `
-      <section class="min-h-screen pt-24 text-gray-200 font-mono px-4 py-6">
+      <main class="min-h-screen pt-24 text-gray-200 font-mono px-4 py-6">
         <div id="detail" class="max-w-5xl mx-auto">
-          <p class="text-gray-500 text-center animate-pulse">loading...</p>
+          <p class="text-gray-500 text-center animate-pulse" aria-live="polite">loading...</p>
         </div>
-      </section>
+      </main>
     `;
 	}
 
 	async afterRender() {
-		const path = getActivePathname(); // /stories/xxx
+		const path = getActivePathname();
 		const id = path.split("/")[2];
 
-		try {
-			const story = await getDetailStory(id);
+		const presenter = new DetailPresenter({
+			view: {
+				renderDetail: (story) => this._displayDetail(story),
+				showError: (msg) => {
+					document.getElementById("detail").innerHTML = `
+            <p class="text-red-400 text-center" aria-live="assertive">${msg}</p>
+          `;
+				},
+			},
+		});
 
-			const container = document.getElementById("detail");
+		// Panggil logika melalui presenter
+		await presenter.loadStoryDetail(id);
+	}
 
-			container.innerHTML = `
-        <article class="md:flex rounded-2xl overflow-hidden
-                        bg-black/40 border border-cyan-500/20
-                        shadow-[0_0_30px_rgba(0,255,255,0.05)]">
+	_displayDetail(story) {
+		const container = document.getElementById("detail");
 
-          <img 
-            src="${story.photoUrl}" 
-            style="view-transition-name: story-img-${story.id}"
-            class="w-full h-auto object-cover md:w-1/2 md:h-auto"
-          />
+		container.innerHTML = `
+      <article class="md:flex rounded-2xl overflow-hidden bg-black/40 border border-cyan-500/20 shadow-[0_0_30px_rgba(0,255,255,0.05)]">
+        <img 
+          src="${story.photoUrl}" 
+          alt="Photo of ${story.name} story"
+          style="view-transition-name: story-img-${story.id}"
+          class="w-full h-auto object-cover md:w-1/2 md:h-auto"
+        />
 
-          <div class="flex flex-col flex-1 justify-between p-5">
-
-            <div class="w-full">
-              <h1 class="text-xl font-bold text-cyan-400 mb-2">
-                ${story.name}
-              </h1>
-
-              <p class="text-gray-400 mb-4">
-                ${story.description}
-              </p>
-
-              <div class="text-sm text-gray-500">
-                ${new Date(story.createdAt).toLocaleString()}
-              </div>
-
-              ${
-								story.lat !== null && story.lon !== null
-									? `
-                    <div class="mt-4 text-xs text-cyan-400">
-                      📍 ${story.lat}, ${story.lon}
-                    </div>
-
-                    <div id="map" class="w-full h-48 mt-3 rounded-lg border border-gray-700"></div>
-                  `
-									: ""
-							}
+        <div class="flex flex-col flex-1 justify-between p-5">
+          <div class="w-full">
+            <h1 class="text-xl font-bold text-cyan-400 mb-2">${story.name}</h1>
+            <p class="text-gray-400 mb-4">${story.description}</p>
+            <div class="text-sm text-gray-500">
+              <time datetime="${story.createdAt}">${new Date(story.createdAt).toLocaleString()}</time>
             </div>
 
-            <a  href="#/" class="text-cyan-400 pt-6 opacity-70 group-hover:opacity-100 transition">
-              <- back
-            </a>
-
+            ${
+							story.lat !== null && story.lon !== null
+								? `
+                <div class="mt-4 text-xs text-cyan-400">📍 ${story.lat}, ${story.lon}</div>
+                <div id="map" role="application" aria-label="Location Map" class="w-full h-48 mt-3 rounded-lg border border-gray-700"></div>
+              `
+								: ""
+						}
           </div>
 
-        </article>
-      `;
+          <a href="#/" class="text-cyan-400 pt-6 opacity-70 hover:opacity-100 transition inline-block">
+            <- back
+          </a>
+        </div>
+      </article>
+    `;
 
-      if (story.lat !== null && story.lon !== null) {
-				const map = L.map("map").setView([story.lat, story.lon], 13);
-
-				L.tileLayer("https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png", {
-					attribution: "&copy; OpenStreetMap contributors",
-				}).addTo(map);
-
-				L.marker([story.lat, story.lon])
-					.addTo(map)
-					.bindPopup(story.name)
-					.openPopup();
-
-				setTimeout(() => {
-					map.invalidateSize();
-				}, 100);
-			}
-
-		} catch (err) {
-			document.getElementById("detail").innerHTML = `
-        <p class="text-red-400 text-center">${err.message}</p>
-      `;
+		if (story.lat !== null && story.lon !== null) {
+			this._initMap(story);
 		}
+	}
+
+	_initMap(story) {
+		const osm = L.tileLayer(
+			"https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png",
+			{
+				attribution: "&copy; OpenStreetMap",
+			},
+		);
+
+		const satellite = L.tileLayer(
+			"https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
+			{
+				attribution: "Tiles &copy; Esri",
+			},
+		);
+
+		const map = L.map("map", {
+			center: [story.lat, story.lon],
+			zoom: 13,
+			layers: [osm],
+		});
+
+		const baseMaps = {
+			Default: osm,
+			Satelit: satellite,
+		};
+
+		L.control.layers(baseMaps).addTo(map);
+
+		L.marker([story.lat, story.lon])
+			.addTo(map)
+			.bindPopup(`<b>${story.name}</b>`)
+			.openPopup();
+
+		setTimeout(() => map.invalidateSize(), 200);
 	}
 }
