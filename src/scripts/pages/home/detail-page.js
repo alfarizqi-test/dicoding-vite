@@ -30,6 +30,7 @@ export default class DetailPage {
 
           <img 
             src="${story.photoUrl}" 
+            style="view-transition-name: story-img-${story.id}"
             class="w-full h-auto object-cover md:w-1/2 md:h-auto"
           />
 
@@ -61,7 +62,7 @@ export default class DetailPage {
 							}
             </div>
 
-            <a  href="#/" class="text-cyan-400 opacity-70 group-hover:opacity-100 transition">
+            <a  href="#/" class="text-cyan-400 pt-6 opacity-70 group-hover:opacity-100 transition">
               <- back
             </a>
 

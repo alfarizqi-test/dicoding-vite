@@ -132,7 +132,7 @@ export default class HomePage {
       <a href="#/stories/${story.id}" class="block h-full">
         <article class="h-full group rounded-2xl overflow-hidden bg-black/40 border border-cyan-500/20 hover:border-cyan-400/40 transition duration-300">
           <div class="relative overflow-hidden">
-            <img src="${story.photoUrl}" class="w-full h-48 object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition duration-300" />
+            <img src="${story.photoUrl}" style="view-transition-name: story-img-${story.id}" class="w-full h-48 object-cover opacity-80 group-hover:opacity-100 group-hover:scale-105 transition duration-300" />
             <div class="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"></div>
           </div>
           <div class="p-4">
