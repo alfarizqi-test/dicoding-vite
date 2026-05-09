@@ -7,6 +7,7 @@ const ENDPOINTS = {
 	ADD_STORY_GUEST: `${CONFIG.BASE_URL}/stories/guest`,
 	GET_STORIES: `${CONFIG.BASE_URL}/stories`,
 	DETAIL_STORY: (id) => `${CONFIG.BASE_URL}/stories/${id}`,
+	NOTIFICATIONS_SUBSCRIBE: `${CONFIG.BASE_URL}/notifications/subscribe`,
 };
 
 function getToken() {
@@ -37,6 +38,22 @@ async function fetchJSON(url, options = {}) {
 	}
 
 	return result;
+}
+
+export async function subscribeNotifications(subscriptionBody) {
+	return fetchJSON(ENDPOINTS.NOTIFICATIONS_SUBSCRIBE, {
+		method: "POST",
+		headers: createHeaders({ isJson: true }),
+		body: JSON.stringify(subscriptionBody),
+	});
+}
+
+export async function unsubscribeNotifications(endpoint) {
+	return fetchJSON(ENDPOINTS.NOTIFICATIONS_SUBSCRIBE, {
+		method: "DELETE",
+		headers: createHeaders({ isJson: true }),
+		body: JSON.stringify({ endpoint }),
+	});
 }
 
 export async function register({ name, email, password }) {
@@ -95,7 +112,7 @@ export async function addStory({ description, photo, lat, lon }) {
 
 	return fetchJSON(ENDPOINTS.ADD_STORY, {
 		method: "POST",
-		headers: createHeaders(), // ❗ jangan set Content-Type
+		headers: createHeaders(),
 		body: formData,
 	});
 }
