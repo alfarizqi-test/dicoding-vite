@@ -3,6 +3,7 @@ import LoginPage from '../pages/auth/login';
 import RegisterPage from "../pages/auth/register";
 import DetailPage from "../pages/home/detail-page";
 import AddStoryPage from "../pages/users/add-story";
+import SavedPage from "../pages/home/saved-page";
 // import AboutPage from '../pages/about/about-page';
 
 const routes = {
@@ -10,6 +11,7 @@ const routes = {
   '/login': new LoginPage(),
   '/stories/:id': new DetailPage(),
 	'/add-story': new AddStoryPage(),
+	'/saved': new SavedPage(),
   '/': new HomePage(),
 };
 

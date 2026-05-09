@@ -2,6 +2,7 @@ import DetailPresenter from "../../presenters/detail-presenter";
 import { getActivePathname } from "../../routes/url-parser";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
+import { saveStory } from "../../utils/story-idb";
 
 export default class DetailPage {
 	async render() {
@@ -63,9 +64,14 @@ export default class DetailPage {
 						}
           </div>
 
-          <a href="#/" class="text-cyan-400 pt-6 opacity-70 hover:opacity-100 transition inline-block">
-            <- back
-          </a>
+          <div class="flex justify-between">
+						<a href="#/" class="text-cyan-400 pt-6 opacity-70 hover:opacity-100 transition inline-block">
+          	  <- back
+          	</a>
+						<button id="saveStoryBtn" class="text-cyan-400 pt-6 opacity-70 hover:opacity-100 transition inline-block">
+							Simpan Offline
+						</button>
+					</div>
         </div>
       </article>
     `;
@@ -73,6 +79,28 @@ export default class DetailPage {
 		if (story.lat !== null && story.lon !== null) {
 			this._initMap(story);
 		}
+
+		const saveButton = document.getElementById("saveStoryBtn");
+
+		saveButton.addEventListener("click", async () => {
+			try {
+				await saveStory({
+					id: story.id,
+					name: story.name,
+					description: story.description,
+					photoUrl: story.photoUrl,
+					createdAt: story.createdAt,
+					lat: story.lat,
+					lon: story.lon,
+				});
+
+				alert("Story berhasil disimpan offline");
+			} catch (error) {
+				console.error(error);
+
+				alert("Gagal menyimpan story");
+			}
+		});
 	}
 
 	_initMap(story) {
